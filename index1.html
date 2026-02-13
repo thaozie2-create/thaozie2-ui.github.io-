@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ömrüm - موقع الحب</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #ff6666;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            transition: all 0.5s ease;
+        }
+        .container {
+            max-width: 900px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        .nav {
+            display: none;
+            margin-bottom: 20px;
+        }
+        .nav button {
+            margin: 0 5px;
+            padding: 5px 10px;
+            background: #ff1493;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .nav button:hover { background: #ff69b4; }
+        h1, h2 {
+            color: #fff;
+            font-family: 'Courier New', monospace;
+        }
+        .section {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+        textarea, input {
+            width: 100%;
+            margin: 10px 0;
+            border: 2px solid #ff1493;
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.8);
+            color: #000;
+        }
+        textarea { height: 150px; }
+        button {
+            background: #ff1493;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+            transition: background 0.3s;
+        }
+        button:hover { background: #ff69b4; }
+        .page { display: none; }
+        .active { display: block; }
+        .short-phrase {
+            margin-top: 20px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        .short-phrase textarea { height: 50px; }
+        iframe { width: 100%; height: 300px; border: none; border-radius: 10px; margin: 10px 0; }
+        img { max-width: 100%; height: auto; border-radius: 10px; margin: 10px 0; }
+        .data-buttons {
+            margin: 10px 0;
+        }
+        .export-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+        .export-modal textarea {
+            width: 80%;
+            height: 60%;
+            background: white;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav" id="nav">
+            <button onclick="goToPage(1)">صفحة 1</button>
+            <button onclick="goToPage(2)">صفحة 2</button>
+            <button onclick="goToPage(3)">صفحة 3</button>
+            <button onclick="goToPage(4)">صفحة 4</button>
+            <button onclick="goToPage(5)">صفحة 5</button>
+            <button onclick="goToPage(6)">صفحة 6</button>
+            <div class="data-buttons">
+                <button onclick="exportData()">تصدير البيانات</button>
+                <input type="file" id="importFile" accept=".json" style="display: none;">
+                <button onclick="document.getElementById('importFile').click()">استيراد البيانات</button>
+            </div>
+        </div>
+
+        <div id="login" class="page active">
+            <h1>Ömrüm</h1>
+            <input type="text" id="username" placeholder="اسم المستخدم">
+            <input type="password" id="password" placeholder="كلمة السر">
+            <button onclick="login()">دخول</button>
+        </div>
+        
+        <div id="page1" class="page">
+            <h2>Ömrüm</h2>
+            <div class="section">
+                <textarea id="message1" placeholder="اكتب رسالتك الحب الطويلة هنا..."></textarea>
+                <button onclick="savePhrase('message1')">حفظ</button>
+            </div>
+            <button onclick="nextPage(2)">التالي</button>
+            <div class="short-phrase">
+                <h3>عبارة قصيرة:</h3>
+                <textarea id="short1" placeholder="اكتب عبارة قصيرة..."></textarea>
+                <button onclick="savePhrase('short1')">حفظ</button>
+            </div>
+        </div>
+        
+        <div id="page2" class="page">
+            <h2>Ömrüm</h2>
+            <div class="section">
+                <input type="url" id="songLink2" placeholder="أدخل رابط الأغنية (مثل يوتيوب)">
+                <button onclick="savePhrase('songLink2')">حفظ</button>
+                <button onclick="loadSong(2)">تشغيل الأغنية</button>
+                <div id="songPlayer2"></div>
+                <textarea id="message2" placeholder="رسالة حب مصاحبة..."></textarea>
+                <button onclick="savePhrase('message2')">حفظ</button>
+            </div>
+            <button onclick="prevPage(1)">السابق</button>
+            <button onclick="nextPage(3)">التالي</button>
+            <div class="short-phrase">
+                <h3>عبارة قصيرة:</h3>
+                <textarea id="short2" placeholder="اكتب عبارة قصيرة..."></textarea>
+                <button onclick="savePhrase('short2')">حفظ</button>
+            </div>
+        </div>
+        
+        <div id="page3" class="page">
+            <h2>Ömrüm</h2>
+            <div class="section">
+                <textarea id="memories" placeholder="اكتب ذكرياتكم الجميلة هنا..."></textarea>
+                <button onclick="savePhrase('memories')">حفظ</button>
+            </div>
+            <button onclick="prevPage(2)">السابق</button>
+            <button onclick="nextPage(4)">التالي</button>
+            <div class="short-phrase">
+                <h3>عبارة قصيرة:</h3>
+                <textarea id="short3" placeholder="اكتب عبارة قصيرة..."></textarea>
+                <button onclick="savePhrase('short3')">حفظ</button>
+            </div>
+        </div>
+        
+        <div id="page4" class="page">
+            <h2>Ömrüm</h2>
+            <div class="section">
+                <input type="url" id="photoLink" placeholder="أدخل رابط الصورة">
+                <button onclick="savePhrase('photoLink')">حفظ</button>
+                <button onclick="loadPhoto()">عرض الصورة</button>
+                <div id="photoDisplay"></div>
+            </div>
+            <button onclick="prevPage(3)">السابق</button>
+            <button onclick="nextPage(5)">التالي</button>
+            <div class="short-phrase">
+                <h3>عبارة قصيرة:</h3>
+                <textarea id="short4" placeholder="اكتب عبارة قصيرة..."></textarea>
+                <button onclick="savePhrase('short4')">حفظ</button>
+            </div>
+        </div>
+        
+        <div id="page5" class="page">
+            <h2>Ömrüm</h2>
+            <div class="section">
+                <input type="url" id="songLink5" placeholder="أدخل رابط الأغنية المختارة">
+                <button onclick="savePhrase('songLink5')">حفظ</button>
+                <button onclick="loadSong(5)">تشغيل الأغنية</button>
+                <div id="songPlayer5"></div>
+            </div>
+            <button onclick="prevPage(4)">السابق</button>
+            <button onclick="nextPage(6)">التالي</button>
+            <div class="short-phrase">
+                <h3>عبارة قصيرة:</h3>
+                <textarea id="short5" placeholder="اكتب عبارة قصيرة..."></textarea>
+                <button onclick="savePhrase('short5')">حفظ</button>
+            </div>
+        </div>
+        
+        <div id="page6" class="page">
+            <h2>Ömrüm</h2>
+            <div class="section">
+                <textarea id="message6" placeholder="اكتب رسالتك الحب الأخيرة هنا..."></textarea>
+                <button onclick="savePhrase('message6')">حفظ</button>
+            </div>
+            <button onclick="prevPage(5)">السابق</button>
+            <div class="short-phrase">
+                <h3>عبارة قصيرة:</h3>
+                <textarea id="short6" placeholder="اكتب عبارة قصيرة..."></textarea>
+                <button onclick="savePhrase('short6')">حفظ</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="export-modal" id="exportModal">
+        <div>
+            <h2>البيانات المصدرة (انسخها واحفظها كملف omrum_data2.json)</h2>
+            <textarea id="exportTextarea" readonly></textarea>
+            <button onclick="copyToClipboard()">نسخ</button>
+            <button onclick="closeExportModal()">إغلاق</button>
+        </div>
+    </div>
+
+    <script>
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            if (username === 'Maram' && password === 'Mylove') {
+                document.getElementById('login').classList.remove('active');
+                document.getElementById('page1').classList.add('active');
+                document.getElementById('nav').style.display = 'block';
+                loadData();
+            } else {
+                alert('اسم المستخدم أو كلمة السر خاطئة!');
+            }
+        }
+        
+        function nextPage(page) {
+            document.querySelector('.active').classList.remove('active');
+            document.getElementById('page' + page).classList.add('active');
+        }
+        
+        function prevPage(page) {
+            document.querySelector('.active').classList.remove('active');
+            document.getElementById('page' + page).classList.add('active');
+        }
+        
+        function goToPage(page) {
+            document.querySelector('.active').classList.remove('active');
+            document.getElementById('page' + page).classList.add('active');
+        }
+        
+        function loadSong(page) {
+            const link = document.getElementById('songLink' + page).value;
+            if (link.includes('youtube.com') || link.includes('youtu.be')) {
+                const videoId = link.split('v=')[1] || link.split('/')[3];
+                document.getElementById('songPlayer' + page).innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe>`;
+            } else {
+                alert('الرابط يجب أن يكون من يوتيوب!');
+            }
+        }
+        
+        function loadPhoto() {
+            const link = document.getElementById('photoLink').value;
+            if (link) {
+                document.getElementById('photoDisplay').innerHTML = `<img src="${link}" alt="صورتنا" onerror="alert('خطأ في تحميل الصورة، تأكد من الرابط!')">`;
+            } else {
+                alert('أدخل رابط الصورة!');
+            }
+        }
+        
+        function savePhrase(id) {
+            const phrase = document.getElementById(id).value;
+            localStorage.setItem(id, phrase);
+            alert('تم الحفظ!');
+        }
+        
+        function exportData() {
+            console.log('بدء تصدير البيانات...');
+            const data = {};
+            let hasData = false;
+            
+            // قائمة العناصر الموجودة فعلياً (تجنب الأخطاء)
+            const existingKeys = [
+                'message1', 'short1',
+                'songLink2', 'message2', 'short2',
+                'memories', 'short3',
+                'photoLink', 'short4',
+                'songLink5', 'short5',
+                'message6', 'short6'
+            ];
+            
+            existingKeys.forEach(key => {
+                const value = localStorage.getItem(key) || '';
+                data[key] = value;
+                if (value) hasData = true;
+            });
+            
+            if (!hasData) {
+                alert('ما في بيانات للتصدير! املأ بعض الرسائل أول.');
+                return;
+            }
+            
+            console.log('البيانات جاهزة:', data);
+            document.getElementById('exportTextarea').value = JSON.stringify(data, null, 2);
+            document.getElementById('exportModal').style.display = 'flex';
+        }
+        
+        function copyToClipboard() {
+            const textarea = document.getElementById('exportTextarea');
+            textarea.select();
+            document.execCommand('copy');
+            alert('تم نسخ البيانات! الآن افتح Notepad، الصق، واحفظ كـ omrum_data2.json');
+        }
+        
+        function closeExportModal() {
+            document.getElementById('exportModal').style.display = 'none';
+        }
+        
+        function importData(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        for (let key in data) {
+                            localStorage.setItem(key, data[key]);
+                        }
+                        loadData();
+                        alert('تم استيراد البيانات بنجاح!');
+                    } catch (error) {
+                        alert('خطأ في ملف البيانات!');
+                    }
+                };
+                reader.readAsText(file);
+            }
+        }
+        
+        function loadData() {
+            // قائمة العناصر الموجودة فعلياً
+            const existingKeys = [
+                'message1', 'short1',
+                'songLink2', 'message2', 'short2',
+                'memories', 'short3',
+                'photoLink', 'short4',
+                'songLink5', 'short5',
+                'message6', 'short6'
+            ];
+            
+            existingKeys.forEach(key => {
+                const value = localStorage.getItem(key);
+                if (value && document.getElementById(key)) {
+                    document.getElementById(key).value = value;
+                }
+            });
+            
+            // تحميل الصورة إذا كانت موجودة
+            const photo = localStorage.getItem('photoLink');
+            if (photo) {
+                document.getElementById('photoLink').value = photo;
+                loadPhoto();
+            }
+        }
+        
+        document.getElementById('importFile').addEventListener('change', importData);
+        
+        window.onload = function() {
+            fetch('omrum_data2.json')
+                .then(response => response.json())
+                .then(data => {
+                    for (let key in data) {
+                        localStorage.setItem(key, data[key]);
+                    }
+                    loadData();
+                })
+                .catch(error => {
+                    console.log('ملف البيانات مش موجود، الموقع هيعمل عادي.');
+                });
+        };
+    </script>
+</body>
+</html>
