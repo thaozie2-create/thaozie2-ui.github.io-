@@ -382,16 +382,23 @@
         document.getElementById('importFile').addEventListener('change', importData);
         
         window.onload = function() {
+            // محاولة تحميل البيانات من الملف الجديد فقط
             fetch('omrum_data2.json')
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('ملف البيانات غير موجود');
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     for (let key in data) {
                         localStorage.setItem(key, data[key]);
                     }
                     loadData();
+                    console.log('تم تحميل البيانات من الملف بنجاح');
                 })
                 .catch(error => {
-                    console.log('ملف البيانات مش موجود، الموقع هيعمل عادي.');
+                    console.log('ما في ملف بيانات، الموقع هيعمل عادي.');
                 });
         };
     </script>
